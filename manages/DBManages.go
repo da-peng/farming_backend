@@ -38,6 +38,7 @@ func RegisterDataBase() {
 // RegisterModel 注册模型
 func RegisterModel() {
 	orm.RegisterModel(new(models.User))
+	orm.RegisterModel(new(models.VegetablePrize))
 	// 参数三：true更新表
 	// 第二个参数 是否强制更新 当为 true的时候，会执行drop table后再建表 ，（每次启动项目会将原先的表和数据都删除
 	orm.RunSyncdb("default", false, true)

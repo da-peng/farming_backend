@@ -41,7 +41,7 @@ func (v *CrewlerInfo) SaveOrUpdateCrewlerInfo(cols ...string) (int64, error) {
 		nums, err := o.Update(v, cols...)
 		if err != nil {
 			beego.Error("保存用户信息失败=>", err)
-			return 0, errors.New("保存用户信息失败")
+			return 0, errors.New("保存爬虫信息失败")
 		}
 		return nums, nil
 	}
@@ -50,7 +50,7 @@ func (v *CrewlerInfo) SaveOrUpdateCrewlerInfo(cols ...string) (int64, error) {
 		id, err := o.Insert(v)
 		if err != nil {
 			beego.Error("保存用户数据失败 =>", err)
-			return 0, errors.New("保存用户失败")
+			return 0, errors.New("保存爬虫信息失败")
 		}
 		return id, nil
 	}
@@ -59,7 +59,7 @@ func (v *CrewlerInfo) SaveOrUpdateCrewlerInfo(cols ...string) (int64, error) {
 
 }
 
-// GetCrewlerInfo  保存或更新 爬虫配置信息
+// GetCrewlerInfo  获取爬虫信息
 func (v *CrewlerInfo) GetCrewlerInfo() (*CrewlerInfo, error) {
 	o := orm.NewOrm()
 	// 判断是否存在

@@ -28,6 +28,13 @@ func (user *User) TableName() string {
 	return "users"
 }
 
+// TableUnique 多字段唯一键 唯一索引
+func (user *User) TableUnique() [][]string {
+	return [][]string{
+		{"user_id", "u_name"},
+	}
+}
+
 // TableEngine 获取数据使用的引擎.
 func (user *User) TableEngine() string {
 	return "INNODB"

@@ -63,4 +63,6 @@ func init() {
 	beego.InsertFilter("/user/*", beego.BeforeRouter, filterUser)
 	beego.InsertFilter("/statistics", beego.BeforeRouter, filterUser)
 	beego.InsertFilter("/statistics/*", beego.BeforeRouter, filterUser)
+	beego.InsertFilter("/crewler", beego.BeforeRouter, filterUser)
+	beego.InsertFilter("/crewler/*", beego.BeforeRouter, filterUser)
 }

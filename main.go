@@ -14,6 +14,7 @@ func main() {
 
 	manages.RegisterModel()
 	manages.RegisterLogger()
+
 	beego.Run()
 
 }
