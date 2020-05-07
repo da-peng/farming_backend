@@ -26,9 +26,9 @@ type UserInfo struct {
 	Avatar   string `json:"avatar"`
 }
 
-const (
-	success = "操作成功"
-)
+// const (
+// 	success = "操作成功"
+// )
 
 // Login 用户登录
 func (a *AccountController) Login() {
@@ -80,7 +80,7 @@ func (a *AccountController) GetUserInfo() {
 				a.ResponseJSON(20004, "用户不存在")
 			}
 		}
-		a.ResponseJSON(20004, success, user)
+		a.ResponseJSON(20000, success, user)
 
 	}
 
@@ -106,7 +106,7 @@ func (a *AccountController) Register() {
 			a.ResponseJSON(20004, "注册失败，请联系系统管理员处理")
 		}
 		data := map[string]int64{"uid": uid}
-		a.ResponseJSON(20004, "注册成功", data)
+		a.ResponseJSON(20000, success, data)
 	}
 }
 
@@ -144,7 +144,7 @@ func (a *AccountController) SaveOrUpdateUserInfo() {
 			a.ResponseJSON(20004, "更新失败，请联系系统管理员处理")
 		}
 
-		a.ResponseJSON(20005, success)
+		a.ResponseJSON(20000, success)
 
 	}
 }

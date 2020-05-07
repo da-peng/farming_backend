@@ -1,12 +1,12 @@
 package main
 
 import (
-	"farming_backend/manages"
 	_ "farming_backend/routers"
 
-	_ "github.com/go-sql-driver/mysql"
+	"farming_backend/manages"
 
 	"github.com/astaxie/beego"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {

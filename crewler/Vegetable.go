@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 
 	"farming_backend/models"
@@ -23,7 +24,8 @@ const (
 
 //GetURL 获取url
 func getURL(startTime string, endTime string, page int) string {
-
+	startTime = strings.Replace(startTime, "-", "_", -1)
+	endTime = strings.Replace(endTime, "-", "_", -1)
 	return "http://www.jnmarket.net/import/list-1/date-" + startTime + "-" + endTime + "/" + strconv.Itoa(page) + ".html"
 }
 
@@ -67,8 +69,10 @@ func VegetableCrewler(startTime string, endTime string) {
 			}
 			vegetablePrizeList = append(vegetablePrizeList, vegetablePrize)
 		})
+		fmt.Println(vegetablePrizeList)
 		models.AddMulti(vegetablePrizeList)
 		vegetablePrizeList = []models.VegetablePrize{}
+		fmt.Println(vegetablePrizeList)
 	})
 
 	c.OnError(func(r *colly.Response, err error) {

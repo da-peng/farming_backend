@@ -2,22 +2,38 @@ package routers
 
 import (
 	"encoding/json"
+	"farming_backend/models"
+	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 )
 
+func errorRequest(ctx *context.Context, errcode int, message string) {
+	jsonData := make(map[string]interface{}, 3)
+	jsonData["errcode"] = errcode
+	jsonData["message"] = message
+	returnJSON, _ := json.Marshal(jsonData)
+	ctx.ResponseWriter.Write(returnJSON)
+}
+
 func filterUser(ctx *context.Context) {
 	token := ctx.Input.Header("token")
 	beego.Info("用户token ->", token)
 	if token == "" {
-		jsonData := make(map[string]interface{}, 3)
-		jsonData["errcode"] = 20401
-		jsonData["message"] = "请登录后再操作"
-		returnJSON, _ := json.Marshal(jsonData)
-		ctx.ResponseWriter.Write(returnJSON)
+		errorRequest(ctx, 20401, "请登录后再操作")
 		return
+	} else {
+		user := models.NewUser()
+		userID, _ := strconv.Atoi(token)
+		user.UserID = userID
+		u, err := user.GetUserInfo()
+		if err != nil {
+			errorRequest(ctx, 20401, "请登录后再操作")
+			return
+		}
+		beego.Info("用户 ->", u.UserName)
 	}
 
 	if ctx.Input.IsPost() {
@@ -25,11 +41,7 @@ func filterUser(ctx *context.Context) {
 		m := make(map[string]interface{})
 		err := json.Unmarshal(requestBody, &m)
 		if err != nil {
-			jsonData := make(map[string]interface{}, 3)
-			jsonData["errcode"] = 20402
-			jsonData["message"] = "请求数据异常"
-			returnJSON, _ := json.Marshal(jsonData)
-			ctx.ResponseWriter.Write(returnJSON)
+			errorRequest(ctx, 20402, "请求数据异常")
 		}
 	}
 }
@@ -43,11 +55,7 @@ func filterRequestInfo(ctx *context.Context) {
 func filterContentType(ctx *context.Context) {
 	contentType := ctx.Input.Header("Content-Type")
 	if !strings.Contains(strings.ToLower(contentType), "application/json") {
-		jsonData := make(map[string]interface{}, 3)
-		jsonData["errcode"] = 20403
-		jsonData["message"] = "请求数据异常"
-		returnJSON, _ := json.Marshal(jsonData)
-		ctx.ResponseWriter.Write(returnJSON)
+		errorRequest(ctx, 20403, "请求数据异常")
 	}
 }
 
@@ -65,4 +73,7 @@ func init() {
 	beego.InsertFilter("/statistics/*", beego.BeforeRouter, filterUser)
 	beego.InsertFilter("/crewler", beego.BeforeRouter, filterUser)
 	beego.InsertFilter("/crewler/*", beego.BeforeRouter, filterUser)
+	beego.InsertFilter("/vegetable", beego.BeforeRouter, filterUser)
+	beego.InsertFilter("/vegetable/*", beego.BeforeRouter, filterUser)
+
 }

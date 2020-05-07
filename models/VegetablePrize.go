@@ -1,8 +1,11 @@
 package models
 
 import (
+	"errors"
+	"strconv"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -50,7 +53,7 @@ func NewVegetablePrize() *VegetablePrize {
 func AddMulti(vs []VegetablePrize) (int64, error) {
 	o := orm.NewOrm()
 	//第一个参数 bulk 为并列插入的数量，第二个为对象的slice
-	successNums, err := o.InsertMulti(20, vs)
+	successNums, err := o.InsertMulti(1, vs)
 	if err != nil {
 		return 0, err
 	}
@@ -58,11 +61,72 @@ func AddMulti(vs []VegetablePrize) (int64, error) {
 }
 
 // GetVegetablePriceList 获取蔬菜价格信息
-func GetVegetablePriceList(vegetableName string, startTime string, endTime string) {
+func (v *VegetablePrize) GetVegetablePriceList(vegetableName string, StartTime string, EndTime string) ([]*VegetablePrize, error) {
+	o := orm.NewOrm()
+	var vegetablePrize []*VegetablePrize
 
+	_, err1 := time.Parse("2006-01-02 15:04:05", StartTime)
+	_, err2 := time.Parse("2006-01-02 15:04:05", EndTime)
+	if err1 != nil || err2 != nil {
+		beego.Info("数据不是时间类型")
+		return nil, errors.New("数据不是时间类型")
+	}
+
+	num, err := o.Raw("SELECT * FROM vegetable_prize WHERE vegetable = ? And dateTime > ? And dateTime < ?", vegetableName, StartTime, EndTime).QueryRows(&vegetablePrize)
+	if err != nil {
+		beego.Info("Returned Rows Num: %d, %s", num, err)
+		return nil, err
+	}
+	return vegetablePrize, nil
+}
+
+//VegetablePrizeDTO 蔬菜价格
+type VegetablePrizeDTO struct {
+	Vegetable []string `json:"vegetable"`
 }
 
 // GetVegetableList 获取蔬菜名列表
-func GetVegetableList() {
+func (v *VegetablePrize) GetVegetableList() (*VegetablePrizeDTO, error) {
+	vegetablePrize := &VegetablePrizeDTO{}
+	nTime := time.Now()
+	yesTime := nTime.AddDate(0, 0, -1)
 
+	logDay := yesTime.Format("2006-01-02")
+
+	o := orm.NewOrm()
+	var list orm.ParamsList
+	// num, err := o.QueryTable(v.TableName()).Filter("dateTime", logDay+" 08:00:00").All(&vegetablePrize, "vegetable")
+	num, err := o.Raw("SELECT vegetable  FROM vegetable_prize WHERE dateTime = ?", logDay+" 08:00:00").ValuesFlat(&list)
+	if err != nil {
+		beego.Info("Returned Rows Num: %d, %s", num, err)
+		return nil, err
+	}
+
+	if err == nil && num > 0 {
+		beego.Info(list)
+	}
+	var ret []string
+
+	for _, i := range list {
+		j := convertString(i)
+		ret = append(ret, string(j))
+	}
+	// beego.Info(ret)
+
+	vegetablePrize.Vegetable = ret
+
+	return vegetablePrize, nil
+}
+
+func convertString(e interface{}) string {
+	var s string
+	switch v := e.(type) {
+	case int:
+		// fmt.Println("整型", v)
+		s = strconv.Itoa(v)
+		// fmt.Println(s)
+	case string:
+		s = v
+	}
+	return s
 }

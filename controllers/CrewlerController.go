@@ -30,7 +30,7 @@ func (c *CrewlerController) SpiderVegetablePrice() {
 		endTime := strings.Split(crewlerRange.EndTime, " ")[0][2:]
 		crewler.VegetableCrewler(startTime, endTime)
 
-		c.ResponseJSON(20004, "请求成功")
+		c.ResponseJSON(20000, "操作成功")
 
 	}
 }
