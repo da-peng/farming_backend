@@ -11,7 +11,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/gocolly/colly/v2 v2.0.1 // indirect
 	github.com/golang/protobuf v1.4.0 // indirect
-	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba
+	github.com/jackdanger/collectlinks v0.0.0-20160421202702-24c4ee2870ba // indirect
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0 // indirect
 	google.golang.org/appengine v1.6.6 // indirect

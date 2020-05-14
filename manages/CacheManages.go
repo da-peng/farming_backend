@@ -30,6 +30,7 @@ func StorageToken(token string, uid int, lastTime time.Time) {
 
 // FindUIDByToken 查找Uid
 func FindUIDByToken(token string) interface{} {
-	value := tokenCache.Get(token)
-	return value
+	userInfo := tokenCache.Get(token)
+	
+	return userInfo
 }

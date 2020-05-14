@@ -69,10 +69,10 @@ func VegetableCrewler(startTime string, endTime string) {
 			}
 			vegetablePrizeList = append(vegetablePrizeList, vegetablePrize)
 		})
-		fmt.Println(vegetablePrizeList)
+		// fmt.Println(vegetablePrizeList)
 		models.AddMulti(vegetablePrizeList)
 		vegetablePrizeList = []models.VegetablePrize{}
-		fmt.Println(vegetablePrizeList)
+		// fmt.Println(vegetablePrizeList)
 	})
 
 	c.OnError(func(r *colly.Response, err error) {

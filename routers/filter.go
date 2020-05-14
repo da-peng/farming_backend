@@ -8,6 +8,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/plugins/cors"
 )
 
 func errorRequest(ctx *context.Context, errcode int, message string) {
@@ -61,10 +62,20 @@ func filterContentType(ctx *context.Context) {
 
 func finishRouter(ctx *context.Context) {
 	ctx.ResponseWriter.Header().Add("Farming-Version", "1.0")
+	ctx.ResponseWriter.Header().Add("Access-Control-Allow-Credentials", "*")
+	ctx.ResponseWriter.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS")
 	ctx.ResponseWriter.Header().Add("Farming-Site", "https://www.suwan.club")
 }
 
 func init() {
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
+
 	beego.InsertFilter("*", beego.BeforeRouter, filterRequestInfo)
 	beego.InsertFilter("*", beego.BeforeRouter, filterContentType)
 	beego.InsertFilter("/user", beego.BeforeRouter, filterUser)
